@@ -3,7 +3,7 @@ const expect = chai.expect;
 const should = chai.should();
 const chaiHttp = require('chai-http');
 const server = require('../server');
-const Product = require('../models/models');
+const Models = require('../models/models');
 chai.use(chaiHttp);
 
 describe('/First Test Collection', () => {
@@ -16,7 +16,7 @@ describe('/First Test Collection', () => {
             res.should.have.status(200);
             res.body.should.be.a('object');    
             const actualVal = res.body.message;
-            expect(actualVal).to.be.equal('Welcome to the MEN-REST-API');        
+            expect(actualVal).to.be.equal('Welcome to this webshop with BMW models');        
             done();
         });
     });
@@ -35,7 +35,7 @@ describe('/First Test Collection', () => {
 
     
     it('it should POST a valid product', (done) => {
-        let product = {
+        let models = {
             series: "Test Product",
             description: "Test Product Description",
             price: 360000,
@@ -45,7 +45,7 @@ describe('/First Test Collection', () => {
         }
         chai.request(server)
         .post('/api/models')
-        .send(product)
+        .send(models)
         .end((err, res) => {
             res.should.have.status(201);
             done();
@@ -64,7 +64,7 @@ describe('/First Test Collection', () => {
     });
 
     it('it should UPDATE a model given the id', (done) => {
-        let product = new Product({
+        let models = new Models({
         series: "Test Product", 
         description: "Test Product Description",
         price: 360000,
@@ -72,9 +72,9 @@ describe('/First Test Collection', () => {
         cylinder: 4,
         color: "white",
         })
-        product.save((err, product) => {
+        models.save((err, models) => {
             chai.request(server)
-            .put('/api/models/' + product.id)
+            .put('/api/models/' + models.id)
             .send({ 
             series: "Test Product2", 
             description: "Test Product Description2",
@@ -92,17 +92,17 @@ describe('/First Test Collection', () => {
     });
 
     it('it should GET a product by the given id', (done) => {
-        let product = new Product({ 
+        let models = new Models({ 
         series: "Test Product2", 
         description: "Test Product Description2",
         price: 390000,
         inStock: false,
         cylinder: 3,
         color: "grey", });
-        product.save((err, product) => {
+        models.save((err, models) => {
             chai.request(server)
-          .get('/api/models/' + product.id)
-          .send(product)
+          .get('/api/models/' + models.id)
+          .send(models)
           .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('object');
@@ -112,7 +112,7 @@ describe('/First Test Collection', () => {
                 res.body.should.have.property('inStock');
                 res.body.should.have.property('cylinder');
                 res.body.should.have.property('color');
-                res.body.should.have.property('_id').eql(product.id);
+                res.body.should.have.property('_id').eql(models.id);
             done();
           });
         });
@@ -120,16 +120,16 @@ describe('/First Test Collection', () => {
     });
 
     it('it should DELETE a model given the id', (done) => {
-        let product = new Product({ 
+        let models = new Models({ 
         series: "2", 
         description: "luxury sedan",
         price: 430000,
         inStock: true,
         cylinder: 6,
         color: "black",})
-        product.save((err, product) => {
+        models.save((err, models) => {
               chai.request(server)
-              .delete('/api/models/' + product.id)
+              .delete('/api/models/' + models.id)
               .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
@@ -138,17 +138,6 @@ describe('/First Test Collection', () => {
               });
         });
     });
-
-    
-
-
-
-
-    
-
-    
-  
-    
 })
 
 
